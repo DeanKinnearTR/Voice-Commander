@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using System;
 using VoiceCommander.Resources.Icons;
@@ -8,123 +7,45 @@ using VoiceCommander.Types;
 
 namespace VoiceCommander
 {
+    //TODO: Implement UI
+    //TODO: Add caching for resources
+
     public partial class MainForm : Form
     {
-        private Recognition _engine;
-        private EngineStates _engineState = EngineStates.Idle;
 
+        private readonly Controller _controller;
         public MainForm()
         {
             InitializeComponent();
-            InitializeEngine(PhraseTypes.All);
+            _controller = new Controller();
+            _controller.StateChange += _controller_StateChange;
         }
 
-        private void InitializeEngine(PhraseTypes phraseType)
+        private void _controller_StateChange(ControllerStates state)
         {
-            _engine?.Dispose();
-
-            _engine = new Recognition();
-            _engine.Recognized += Engine_Recognized;
-
-            var phrases = new List<string>();
-            if (phraseType.HasFlag(PhraseTypes.Stop))
+            switch (state)
             {
-                phrases.Add("Stop Listening");
-            }
-            if (phraseType.HasFlag(PhraseTypes.Start))
-            {
-                phrases.Add("Start Listening");
-            }
-            if (phraseType.HasFlag(PhraseTypes.ExitCommander))
-            {
-                phrases.Add("Exit Commander");
-            }
-            if (phraseType.HasFlag(PhraseTypes.Repository))
-            {
-                var read = Repository.Read();
-                if (read != null)
-                {
-                    phrases.AddRange(read.Select(item => item.Text));
-                }
-            }
-            _engine.AddPhrases(phrases);
-            _engine.StartRecognition();
-            _engineState = EngineStates.Listening;
-        }
-
-        private void Engine_Recognized(string text)
-        {
-            try
-            {
-                if (text.Equals("Stop Listening", StringComparison.OrdinalIgnoreCase))
-                {
-                    _engineState = EngineStates.NotListening;
-                    NotifyIcon.Icon = Icons.GetIcon("NotListening.ico");
-                    Audio.PlaySound("communications_end_transmission.wav");
-                    InitializeEngine(PhraseTypes.Start);
-                    return;
-                }
-                if (text.Equals("Start Listening", StringComparison.OrdinalIgnoreCase))
-                {
-                    _engineState = EngineStates.Listening;
+                case ControllerStates.Listening:
                     NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
                     Audio.PlaySound("communications_start_transmission.wav");
-                    InitializeEngine(PhraseTypes.All);
+                    break;
+                case ControllerStates.NotListening:
+                    NotifyIcon.Icon = Icons.GetIcon("NotListening.ico");
+                    Audio.PlaySound("communications_end_transmission.wav");
+                    break;
+                case ControllerStates.Error:
+                    NotifyIcon.Icon = Icons.GetIcon("ErrorIcon.ico");
+                    Audio.PlaySound("computer_error.wav");
+                    break;
+                case ControllerStates.Action:
+                    NotifyIcon.Icon = Icons.GetIcon("BusyIcon.ico");
+                    Audio.PlaySound("computer_work_beep.wav");
+                    break;
+                case ControllerStates.ShutDown:
+                    ShutdowmCommander();
                     return;
-                }
-                if (text.Equals("Exit Commander", StringComparison.OrdinalIgnoreCase))
-                {
-                    ExitCommander();
-                    return;
-                }
 
-                if (_engineState == EngineStates.NotListening) return;
-
-                var items = Repository.Read();
-                var item = items.FirstOrDefault(q => q.Text.Equals(text, StringComparison.OrdinalIgnoreCase));
-                if (item == null)
-                {
-                    SetErrorState();
-                    return;
-                }
-
-                NotifyIcon.Icon = Icons.GetIcon("BusyIcon.ico");
-                switch (item.CommandType)
-                {
-                    case CommandTypes.Launch:
-                    {
-                        foreach (var action in item.Actions)
-                        {
-                            System.Diagnostics.Process.Start(action);
-                        }
-
-                        break;
-                    }
-                    case CommandTypes.SendKeys:
-                    {
-                        foreach (var action in item.Actions)
-                        {
-                            SendKeys.Send(action);
-                        }
-
-                        break;
-                    }
-                }
-
-                Audio.PlaySound("computer_work_beep.wav");
-                NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
             }
-            catch
-            {
-                SetErrorState();
-            }
-        }
-
-        private void SetErrorState()
-        {
-            _engineState = EngineStates.Error;
-            NotifyIcon.Icon = Icons.GetIcon("ErrorIcon.ico");
-            Audio.PlaySound("computer_error.wav");
         }
 
         //To add application to startup, get startup path from windows-run: shell:startup

@@ -1,10 +1,11 @@
 ﻿namespace VoiceCommander.Types
 {
-    public enum EngineStates
+    public enum ControllerStates
     {
-        Idle,
         Listening,
         NotListening,
-        Error
+        Action,
+        Error,
+        ShutDown,
     }
 }

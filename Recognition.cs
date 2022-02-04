@@ -7,9 +7,8 @@ namespace VoiceCommander
     public class Recognition : IDisposable
     {
         public event Action<string> Recognized;
-
         private readonly SpeechRecognitionEngine _engine;
-        private GrammarBuilder _builder;
+        private readonly GrammarBuilder _builder;
         private Grammar _grammar;
 
         public Recognition()
@@ -19,11 +18,6 @@ namespace VoiceCommander
 
             _engine.SpeechRecognized += recognizer_SpeechRecognized;
             _engine.SetInputToDefaultAudioDevice();           
-        }
-
-        public void ClearPhrases()
-        {
-            _builder = new GrammarBuilder();
         }
 
         public void AddPhrases(List<string> items)

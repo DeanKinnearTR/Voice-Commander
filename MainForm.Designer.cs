@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using VoiceCommander.Resources.Wav;
 
 namespace VoiceCommander
@@ -143,7 +141,7 @@ namespace VoiceCommander
             e.Cancel = true;
             showForm = false;
             SetVisibleCore(false);
-            _engine.Dispose();
+            _controller.Dispose();
         }
 
         private void ShowDialog_Click(object sender, System.EventArgs e)
@@ -157,7 +155,7 @@ namespace VoiceCommander
             //SetVisibleCore(true);
         }
 
-        private void ExitCommander()
+        private void ShutdowmCommander()
         {
             Audio.PlaySound("holodeck_end_program.wav", false);
             exiting = true;
@@ -166,7 +164,7 @@ namespace VoiceCommander
 
         private void ExitApplication_Click(object sender, System.EventArgs e)
         {
-            ExitCommander();
+            ShutdowmCommander();
         }
 
         private System.Windows.Forms.NotifyIcon NotifyIcon;
