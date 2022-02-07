@@ -11,7 +11,7 @@ namespace VoiceCommander
         public event Action<ControllerStates> StateChange;
 
         private Recognition _engine;
-        private ControllerStates _engineState = ControllerStates.Listening;
+        private ControllerStates _engineState;
 
         public Controller()
         {
@@ -52,7 +52,6 @@ namespace VoiceCommander
 
             _engine.AddPhrases(phrases);
             _engine.StartRecognition();
-            _engineState = ControllerStates.Listening;
         }
 
         private void Engine_Recognized(string text)
@@ -85,7 +84,7 @@ namespace VoiceCommander
                 var item = items.FirstOrDefault(q => q.Text.Equals(text, StringComparison.OrdinalIgnoreCase));
                 if (item == null)
                 {
-                    SetErrorState();
+                    StateChange?.Invoke(_engineState = ControllerStates.Error);
                     return;
                 }
 
@@ -116,14 +115,8 @@ namespace VoiceCommander
             }
             catch
             {
-                SetErrorState();
+                StateChange?.Invoke(_engineState = ControllerStates.Error);
             }
-        }
-
-        private void SetErrorState()
-        {
-            _engineState = ControllerStates.Error;
-            StateChange?.Invoke(_engineState);
         }
 
         public void Dispose()
