@@ -88,7 +88,7 @@ namespace VoiceCommander
                     return;
                 }
 
-                StateChange?.Invoke(ControllerStates.Action);
+                StateChange?.Invoke(_engineState = ControllerStates.Action);
                 switch (item.CommandType)
                 {
                     case CommandTypes.Launch:
@@ -111,7 +111,7 @@ namespace VoiceCommander
                         }
                 }
 
-                StateChange?.Invoke(ControllerStates.Listening);
+                StateChange?.Invoke(_engineState = ControllerStates.Listening);
             }
             catch
             {
