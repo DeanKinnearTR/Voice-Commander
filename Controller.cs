@@ -12,6 +12,9 @@ namespace VoiceCommander
 
         private Recognition _engine;
         private ControllerStates _engineState;
+        private const string StartListening = "Commander start listening";
+        private const string StopListening = "Commander stop listening";
+        private const string ExitCommander = "Commander exit application";
 
         public Controller()
         {
@@ -25,31 +28,22 @@ namespace VoiceCommander
             _engine = new Recognition();
             _engine.Recognized += Engine_Recognized;
 
-            var phrases = new List<string>();
-            if (phraseType.HasFlag(PhraseTypes.Stop))
+            var phrases = new List<string>
             {
-                phrases.Add("Stop Listening");
-            }
+                StartListening
+            };
 
-            if (phraseType.HasFlag(PhraseTypes.Start))
+            if (phraseType == PhraseTypes.All)
             {
-                phrases.Add("Start Listening");
-            }
-
-            if (phraseType.HasFlag(PhraseTypes.ExitCommander))
-            {
-                phrases.Add("Exit Commander");
-            }
-
-            if (phraseType.HasFlag(PhraseTypes.Repository))
-            {
+                phrases.Add(StopListening);
+                phrases.Add(ExitCommander);
                 var read = Repository.Read();
                 if (read != null)
                 {
                     phrases.AddRange(read.Select(item => item.Text));
                 }
             }
-
+            
             _engine.AddPhrases(phrases);
             _engine.StartRecognition();
         }
@@ -58,21 +52,23 @@ namespace VoiceCommander
         {
             try
             {
-                if (text.Equals("Stop Listening", StringComparison.OrdinalIgnoreCase))
+                if (text.Equals(StopListening, StringComparison.OrdinalIgnoreCase))
                 {
+                    if (_engineState == ControllerStates.NotListening) return;
                     StateChange?.Invoke(_engineState = ControllerStates.NotListening);
-                    InitializeEngine(PhraseTypes.Start);
+                    InitializeEngine(PhraseTypes.StartOnly);
                     return;
                 }
 
-                if (text.Equals("Start Listening", StringComparison.OrdinalIgnoreCase))
+                if (text.Equals(StartListening, StringComparison.OrdinalIgnoreCase))
                 {
+                    if (_engineState == ControllerStates.Listening) return;
                     StateChange?.Invoke(_engineState = ControllerStates.Listening);
                     InitializeEngine(PhraseTypes.All);
                     return;
                 }
 
-                if (text.Equals("Exit Commander", StringComparison.OrdinalIgnoreCase))
+                if (text.Equals(ExitCommander, StringComparison.OrdinalIgnoreCase))
                 {
                     StateChange?.Invoke(_engineState = ControllerStates.ShutDown);
                     return;

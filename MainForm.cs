@@ -12,7 +12,6 @@ namespace VoiceCommander
 
     public partial class MainForm : Form
     {
-
         private readonly Controller _controller;
         public MainForm()
         {
