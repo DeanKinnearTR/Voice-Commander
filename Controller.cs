@@ -12,9 +12,9 @@ namespace VoiceCommander
 
         private Recognition _engine;
         private ControllerStates _engineState;
-        private const string StartListening = "Commander start listening";
-        private const string StopListening = "Commander stop listening";
-        private const string ExitCommander = "Commander exit application";
+        private const string StartListening = "Chaos start listening";
+        private const string StopListening = "Chaos stop listening";
+        private const string ExitCommander = "Chaos exit application";
 
         public Controller()
         {
