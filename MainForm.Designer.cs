@@ -108,7 +108,7 @@ namespace VoiceCommander
             this.button1.TabIndex = 2;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.TemporaryHack);
             // 
             // MainForm
             // 
@@ -133,7 +133,7 @@ namespace VoiceCommander
         private void NotifyIcon_DoubleClick(object sender, System.EventArgs e)
         {
             //ShowForm();
-            button1_Click(null, null);
+            TemporaryHack(null, null);
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

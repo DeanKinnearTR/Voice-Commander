@@ -106,8 +106,6 @@ namespace VoiceCommander
                             break;
                         }
                 }
-
-                StateChange?.Invoke(_engineState = ControllerStates.Listening);
             }
             catch
             {

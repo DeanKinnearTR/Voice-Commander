@@ -52,7 +52,7 @@ namespace VoiceCommander
         //then add shortcut to exe in debug folder.
         //Until there is a UI, double click system tray icon to write settings below, then restart solution to update settings
         //SendKeys commands: https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.sendkeys
-        private void button1_Click(object sender, EventArgs e)
+        private void TemporaryHack(object sender, EventArgs e)
         {
             var items = new List<CommandItem>
             {
