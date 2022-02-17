@@ -10,81 +10,66 @@ namespace VoiceCommander
     {
         public event Action<ControllerStates> StateChange;
 
-        private Recognition _engine;
-        private ControllerStates _engineState;
-        private const string StartListening = "Chaos start listening";
-        private const string StopListening = "Chaos stop listening";
-        private const string ExitCommander = "Chaos exit application";
+        private readonly Recognition _engine;
+        private const string ExitCommander = "Exit application";
 
         public Controller()
         {
-            InitializeEngine(PhraseTypes.All);
-        }
-
-        private void InitializeEngine(PhraseTypes phraseType)
-        {
-            _engine?.Dispose();
-
             _engine = new Recognition();
             _engine.Recognized += Engine_Recognized;
 
             var phrases = new List<string>
             {
-                StartListening
+                ExitCommander
             };
 
-            if (phraseType == PhraseTypes.All)
+            var read = Repository.Read();
+            if (read != null)
             {
-                phrases.Add(StopListening);
-                phrases.Add(ExitCommander);
-                var read = Repository.Read();
-                if (read != null)
+                phrases.AddRange(read.Select(item => item.Text).ToList());
+            }
+
+            _engine.AddPhrases(phrases);
+        }
+
+        private bool _listening;
+
+        public bool Listening
+        {
+            get => _listening;
+            set
+            {
+                _listening = value;
+                if (value)
                 {
-                    phrases.AddRange(read.Select(item => item.Text));
+                    _engine.StartRecognition();
+                }
+                else
+                {
+                    _engine.StopRecognition();
                 }
             }
-            
-            _engine.AddPhrases(phrases);
-            _engine.StartRecognition();
         }
 
         private void Engine_Recognized(string text)
         {
             try
             {
-                if (text.Equals(StopListening, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_engineState == ControllerStates.NotListening) return;
-                    StateChange?.Invoke(_engineState = ControllerStates.NotListening);
-                    InitializeEngine(PhraseTypes.StartOnly);
-                    return;
-                }
-
-                if (text.Equals(StartListening, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_engineState == ControllerStates.Listening) return;
-                    StateChange?.Invoke(_engineState = ControllerStates.Listening);
-                    InitializeEngine(PhraseTypes.All);
-                    return;
-                }
-
                 if (text.Equals(ExitCommander, StringComparison.OrdinalIgnoreCase))
                 {
-                    StateChange?.Invoke(_engineState = ControllerStates.ShutDown);
+                    StateChange?.Invoke(ControllerStates.ShutDown);
                     return;
                 }
-
-                if (_engineState == ControllerStates.NotListening) return;
-
                 var items = Repository.Read();
                 var item = items.FirstOrDefault(q => q.Text.Equals(text, StringComparison.OrdinalIgnoreCase));
                 if (item == null)
                 {
-                    StateChange?.Invoke(_engineState = ControllerStates.Error);
+                    StateChange?.Invoke(ControllerStates.Error);
                     return;
                 }
 
-                StateChange?.Invoke(_engineState = ControllerStates.Action);
+                StateChange?.Invoke(ControllerStates.Action);
+
                 switch (item.CommandType)
                 {
                     case CommandTypes.Launch:
@@ -106,10 +91,12 @@ namespace VoiceCommander
                             break;
                         }
                 }
+
+                StateChange?.Invoke(ControllerStates.ActionComplete);
             }
             catch
             {
-                StateChange?.Invoke(_engineState = ControllerStates.Error);
+                StateChange?.Invoke(ControllerStates.Error);
             }
         }
 

@@ -61,6 +61,7 @@ namespace VoiceCommander
             this.NotifyIcon.Text = "Voice Commander";
             this.NotifyIcon.Visible = true;
             this.NotifyIcon.DoubleClick += new System.EventHandler(this.NotifyIcon_DoubleClick);
+            this.NotifyIcon.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDown);
             // 
             // ContextMenuStrip
             // 

@@ -2,9 +2,8 @@
 {
     public enum ControllerStates
     {
-        Listening,
-        NotListening,
         Action,
+        ActionComplete,
         Error,
         ShutDown,
     }
