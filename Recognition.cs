@@ -9,20 +9,16 @@ namespace VoiceCommander
         public event Action<string> Recognized;
         private readonly SpeechRecognitionEngine _engine;
 
-        public Recognition()
+        public Recognition(List<string> phrases)
         {
             _engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
-            _engine.SpeechRecognized += recognizer_SpeechRecognized;
-            _engine.SetInputToDefaultAudioDevice();           
-        }
-
-        public void AddPhrases(List<string> items)
-        {
-            var choices = new Choices(items.ToArray());
+            var choices = new Choices(phrases.ToArray());
             var builder = new GrammarBuilder();
             builder.Append(choices);
             var grammar = new Grammar(builder);
             _engine.LoadGrammar(grammar);
+            _engine.SpeechRecognized += recognizer_SpeechRecognized;
+            _engine.SetInputToDefaultAudioDevice();           
         }
 
         public void StartRecognition()

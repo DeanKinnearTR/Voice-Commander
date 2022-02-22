@@ -12,28 +12,27 @@ namespace VoiceCommander
 
         private readonly Recognition _engine;
         private const string ExitCommander = "Exit application";
+        private readonly List<CommandItem> _items;
 
         public Controller()
         {
-            _engine = new Recognition();
-            _engine.Recognized += Engine_Recognized;
+            _items = Repository.Read();
 
             var phrases = new List<string>
             {
                 ExitCommander
             };
 
-            var read = Repository.Read();
-            if (read != null)
+            if (_items != null)
             {
-                phrases.AddRange(read.Select(item => item.Text).ToList());
+                phrases.AddRange(_items.Select(item => item.Text).ToList());
             }
 
-            _engine.AddPhrases(phrases);
+            _engine = new Recognition(phrases);
+            _engine.Recognized += Engine_Recognized;
         }
 
         private bool _listening;
-
         public bool Listening
         {
             get => _listening;
@@ -61,8 +60,8 @@ namespace VoiceCommander
                     StateChange?.Invoke(ControllerStates.ShutDown);
                     return;
                 }
-                var items = Repository.Read();
-                var item = items.FirstOrDefault(q => q.Text.Equals(text, StringComparison.OrdinalIgnoreCase));
+
+                var item = _items?.FirstOrDefault(q => q.Text.Equals(text, StringComparison.OrdinalIgnoreCase));
                 if (item == null)
                 {
                     StateChange?.Invoke(ControllerStates.Error);

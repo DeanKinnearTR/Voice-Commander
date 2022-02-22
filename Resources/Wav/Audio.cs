@@ -6,15 +6,18 @@ namespace VoiceCommander.Resources.Wav
     {
         public static void PlaySound(string resourceName, bool asynchronous = true)
         {
-            using (var player = new SoundPlayer(Reader.EmbeddedBinaryResource<Audio>(resourceName)))
+            using (var stream = Reader.EmbeddedBinaryResource<Audio>(resourceName))
             {
-                if (asynchronous)
+                using (var player = new SoundPlayer(stream))
                 {
-                    player.Play();
-                }
-                else
-                {
-                    player.PlaySync();
+                    if (asynchronous)
+                    {
+                        player.Play();
+                    }
+                    else
+                    {
+                        player.PlaySync();
+                    }
                 }
             }
         }
