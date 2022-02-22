@@ -39,6 +39,7 @@ namespace VoiceCommander
             get => _listening;
             set
             {
+                if (_listening == value) return;
                 _listening = value;
                 if (value)
                 {
@@ -68,7 +69,7 @@ namespace VoiceCommander
                     return;
                 }
 
-                StateChange?.Invoke(ControllerStates.Action);
+                StateChange?.Invoke(ControllerStates.ActionStart);
 
                 switch (item.CommandType)
                 {

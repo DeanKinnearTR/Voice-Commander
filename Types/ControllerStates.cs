@@ -2,7 +2,7 @@
 {
     public enum ControllerStates
     {
-        Action,
+        ActionStart,
         ActionComplete,
         Error,
         ShutDown,

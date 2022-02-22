@@ -8,24 +8,21 @@ namespace VoiceCommander
     {
         public event Action<string> Recognized;
         private readonly SpeechRecognitionEngine _engine;
-        private readonly GrammarBuilder _builder;
-        private Grammar _grammar;
 
         public Recognition()
         {
             _engine = new SpeechRecognitionEngine(new System.Globalization.CultureInfo("en-US"));
-            _builder = new GrammarBuilder();
-
             _engine.SpeechRecognized += recognizer_SpeechRecognized;
             _engine.SetInputToDefaultAudioDevice();           
         }
 
         public void AddPhrases(List<string> items)
-        {            
+        {
             var choices = new Choices(items.ToArray());
-            _builder.Append(choices);
-            _grammar = new Grammar(_builder);
-            _engine.LoadGrammar(_grammar);
+            var builder = new GrammarBuilder();
+            builder.Append(choices);
+            var grammar = new Grammar(builder);
+            _engine.LoadGrammar(grammar);
         }
 
         public void StartRecognition()

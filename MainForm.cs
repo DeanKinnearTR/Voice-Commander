@@ -24,16 +24,16 @@ namespace VoiceCommander
         {
             switch (state)
             {
+                case ControllerStates.ActionStart:
+                    NotifyIcon.Icon = Icons.GetIcon("BusyIcon.ico");
+                    Audio.PlaySound("computer_work_beep.wav");
+                    break;
                 case ControllerStates.ActionComplete:
                     NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
                     break;
                 case ControllerStates.Error:
                     NotifyIcon.Icon = Icons.GetIcon("ErrorIcon.ico");
                     Audio.PlaySound("computer_error.wav");
-                    break;
-                case ControllerStates.Action:
-                    NotifyIcon.Icon = Icons.GetIcon("BusyIcon.ico");
-                    Audio.PlaySound("computer_work_beep.wav");
                     break;
                 case ControllerStates.ShutDown:
                     ShutdowmCommander();
@@ -74,22 +74,21 @@ namespace VoiceCommander
 
         private void NotifyIcon_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                var listening = !_controller.Listening;
+            if (e.Button != MouseButtons.Left) return;
 
-                if (listening)
-                {
-                    NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
-                    Audio.PlaySound("communications_start_transmission.wav");
-                }
-                else
-                {
-                    NotifyIcon.Icon = Icons.GetIcon("NotListening.ico");
-                    Audio.PlaySound("communications_end_transmission.wav");
-                }
-                _controller.Listening = listening;
+            var listening = !_controller.Listening;
+
+            if (listening)
+            {
+                NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
+                Audio.PlaySound("communications_start_transmission.wav");
             }
+            else
+            {
+                NotifyIcon.Icon = Icons.GetIcon("NotListening.ico");
+                Audio.PlaySound("communications_end_transmission.wav");
+            }
+            _controller.Listening = listening;
         }
     }
 }
