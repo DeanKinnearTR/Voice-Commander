@@ -17,10 +17,10 @@ namespace VoiceCommander
         {
             InitializeComponent();
             _controller = new Controller();
-            _controller.StateChange += _controller_StateChange;
+            _controller.StateChange += controller_StateChange;
         }
 
-        private void _controller_StateChange(ControllerStates state)
+        private void controller_StateChange(ControllerStates state)
         {
             switch (state)
             {
@@ -77,6 +77,7 @@ namespace VoiceCommander
             if (e.Button != MouseButtons.Left) return;
 
             var listening = !_controller.Listening;
+            _controller.Listening = listening;
 
             if (listening)
             {
@@ -88,7 +89,6 @@ namespace VoiceCommander
                 NotifyIcon.Icon = Icons.GetIcon("NotListening.ico");
                 Audio.PlaySound("communications_end_transmission.wav");
             }
-            _controller.Listening = listening;
         }
     }
 }

@@ -118,7 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DefaultIcon.ico" />
-    <Content Include="NotListening.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

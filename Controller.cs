@@ -16,13 +16,12 @@ namespace VoiceCommander
 
         public Controller()
         {
-            _items = Repository.Read();
-
             var phrases = new List<string>
             {
                 ExitCommander
             };
 
+            _items = Repository.Read();
             if (_items != null)
             {
                 phrases.AddRange(_items.Select(item => item.Text).ToList());
