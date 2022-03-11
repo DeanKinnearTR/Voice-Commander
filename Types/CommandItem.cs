@@ -4,7 +4,7 @@ namespace VoiceCommander.Types
 {
     public class CommandItem
     {
-        public CommandItem(string text, CommandTypes commandType, List<string> actions  )
+        public CommandItem(string text, CommandTypes commandType, List<string> actions)
         {
             CommandType = commandType;
             Actions = actions;

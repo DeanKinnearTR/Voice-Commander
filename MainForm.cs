@@ -17,10 +17,10 @@ namespace VoiceCommander
         {
             InitializeComponent();
             _controller = new Controller();
-            _controller.StateChange += controller_StateChange;
+            _controller.StateChange += Controller_StateChange;
         }
 
-        private void controller_StateChange(ControllerStates state)
+        private void Controller_StateChange(ControllerStates state)
         {
             switch (state)
             {
@@ -51,7 +51,7 @@ namespace VoiceCommander
             {
                 new CommandItem("Relax",CommandTypes.Launch, new List<string> { "https://youtu.be/BuoXZ9zqtSY", "https://youtu.be/NHRuFmwqrak", "https://youtu.be/JsEbVpTCd90" }),
                 new CommandItem("Git Hub", CommandTypes.Launch, new List<string> { "https://github.com/tr?q=guinness&type=&language=" }),
-                new CommandItem("Ado", CommandTypes.Launch, new List<string> { "https://dev.azure.com/tr-corp-default/DataFlow" } ),
+                new CommandItem("Jay Frog", CommandTypes.Launch, new List<string> { "https://tr1.jfrog.io/ui/packages" } ),
                 new CommandItem("Shared Services", CommandTypes.Launch, new List<string> { @"C:\GIT\Guinness_sharedservices-template\Guinness.SharedServices.Template\Guinness.SharedServices.Template.sln" }),
                 new CommandItem("Outlook", CommandTypes.Launch, new List<string> { @"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE" }),
                 new CommandItem("DataCollection Addin",CommandTypes.Launch, new List<string> { @"C:\GIT\Guinness_dataflow-client\DataCollection Client.sln" }),
@@ -69,17 +69,15 @@ namespace VoiceCommander
                 new CommandItem("Open VBA", CommandTypes.SendKeys, new List<string> { @"%{F11}" }),
             };
 
-            Repository.Create(items);
+            Repository.CreateOrUpdate(items);
         }
 
         private void NotifyIcon_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
 
-            var listening = !_controller.Listening;
-            _controller.Listening = listening;
-
-            if (listening)
+            _controller.Listening = !_controller.Listening;
+            if (_controller.Listening)
             {
                 NotifyIcon.Icon = Icons.GetIcon("DefaultIcon.ico");
                 Audio.PlaySound("communications_start_transmission.wav");

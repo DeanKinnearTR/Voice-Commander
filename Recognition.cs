@@ -17,7 +17,7 @@ namespace VoiceCommander
             builder.Append(choices);
             var grammar = new Grammar(builder);
             _engine.LoadGrammar(grammar);
-            _engine.SpeechRecognized += recognizer_SpeechRecognized;
+            _engine.SpeechRecognized += Recognizer_SpeechRecognized;
             _engine.SetInputToDefaultAudioDevice();           
         }
 
@@ -31,7 +31,7 @@ namespace VoiceCommander
             _engine.RecognizeAsyncStop();
         }
 
-        private void recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        private void Recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             Recognized?.Invoke(e.Result.Text);
         }

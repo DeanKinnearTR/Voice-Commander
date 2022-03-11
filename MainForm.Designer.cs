@@ -44,14 +44,14 @@ namespace VoiceCommander
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.NotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ShowDialog = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShowSettingsDialog = new System.Windows.Forms.ToolStripMenuItem();
             this.Separator = new System.Windows.Forms.ToolStripSeparator();
             this.ExitApplication = new System.Windows.Forms.ToolStripMenuItem();
             this.GridMain = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
-            this.ContextMenuStrip.SuspendLayout();
+            this.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.GridMain)).BeginInit();
+            this.ContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // NotifyIcon
@@ -63,31 +63,22 @@ namespace VoiceCommander
             this.NotifyIcon.DoubleClick += new System.EventHandler(this.NotifyIcon_DoubleClick);
             this.NotifyIcon.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyIcon_MouseDown);
             // 
-            // ContextMenuStrip
+            // ShowSettingsDialog
             // 
-            this.ContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ShowDialog,
-            this.Separator,
-            this.ExitApplication});
-            this.ContextMenuStrip.Name = "ContextMenuStrip";
-            this.ContextMenuStrip.Size = new System.Drawing.Size(95, 54);
-            // 
-            // ShowDialog
-            // 
-            this.ShowDialog.Name = "ShowDialog";
-            this.ShowDialog.Size = new System.Drawing.Size(94, 22);
-            this.ShowDialog.Text = "Edit";
-            this.ShowDialog.Click += new System.EventHandler(this.ShowDialog_Click);
+            this.ShowSettingsDialog.Name = "ShowSettingsDialog";
+            this.ShowSettingsDialog.Size = new System.Drawing.Size(180, 22);
+            this.ShowSettingsDialog.Text = "Edit";
+            this.ShowSettingsDialog.Click += new System.EventHandler(this.ShowDialog_Click);
             // 
             // Separator
             // 
             this.Separator.Name = "Separator";
-            this.Separator.Size = new System.Drawing.Size(91, 6);
+            this.Separator.Size = new System.Drawing.Size(177, 6);
             // 
             // ExitApplication
             // 
             this.ExitApplication.Name = "ExitApplication";
-            this.ExitApplication.Size = new System.Drawing.Size(94, 22);
+            this.ExitApplication.Size = new System.Drawing.Size(180, 22);
             this.ExitApplication.Text = "Exit";
             this.ExitApplication.Click += new System.EventHandler(this.ExitApplication_Click);
             // 
@@ -111,11 +102,21 @@ namespace VoiceCommander
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.TemporaryHack);
             // 
+            // ContextMenuStrip
+            // 
+            this.ContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ShowSettingsDialog,
+            this.Separator,
+            this.ExitApplication});
+            this.ContextMenuStrip.Name = "ContextMenuStrip";
+            this.ContextMenuStrip.Size = new System.Drawing.Size(181, 76);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 519);
+            this.ContextMenuStrip = this.ContextMenuStrip;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.GridMain);
             this.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -124,8 +125,8 @@ namespace VoiceCommander
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.ContextMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.GridMain)).EndInit();
+            this.ContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -141,8 +142,7 @@ namespace VoiceCommander
         {
             if (exiting) return;
             e.Cancel = true;
-            showForm = false;
-            SetVisibleCore(false);
+            SetVisibleCore(showForm = false);
             _controller.Dispose();
         }
 
@@ -170,11 +170,11 @@ namespace VoiceCommander
         }
 
         private System.Windows.Forms.NotifyIcon NotifyIcon;
-        private System.Windows.Forms.ContextMenuStrip ContextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem ShowDialog;
+        private System.Windows.Forms.ToolStripMenuItem ShowSettingsDialog;
         private System.Windows.Forms.ToolStripMenuItem ExitApplication;
         private ToolStripSeparator Separator;
         private DataGridView GridMain;
         private Button button1;
+        //private ContextMenuStrip ContextMenuStrip;
     }
 }

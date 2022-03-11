@@ -12,7 +12,7 @@ namespace VoiceCommander
             return string.IsNullOrEmpty(settings) ? null : JsonConvert.DeserializeObject<List<CommandItem>>(settings);
         }
 
-        public static void Create(List<CommandItem> items)
+        public static void CreateOrUpdate(List<CommandItem> items)
         {
             Resources.Settings.Default.UserSettings = JsonConvert.SerializeObject(items);
             Resources.Settings.Default.Save();
