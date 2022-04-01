@@ -143,7 +143,6 @@ namespace VoiceCommander
             if (exiting) return;
             e.Cancel = true;
             SetVisibleCore(showForm = false);
-            _controller.Dispose();
         }
 
         private void ShowDialog_Click(object sender, System.EventArgs e)
@@ -161,6 +160,7 @@ namespace VoiceCommander
         {
             Audio.PlaySound("holodeck_end_program.wav", false);
             exiting = true;
+            _controller.Dispose();
             Application.Exit();
         }
 
